@@ -29,8 +29,12 @@
                     <a class="btn btn-primary" href="/login">Logout</a>
 
                 </p>
+                <a class="{% if request.path == '/add_author/' or request.path == '/add_quote/' %}disabled{% endif %}" href="/add_author">ADD AUTHOR</a>
+                <a class="{% if request.path == '/add_author/' or request.path == '/add_quote/' %}disabled{% endif %}" href="/add_quote">ADD QUOTE</a>
             </div>
         </div>
+
+
 
 {% block content %} {% endblock %}
 
