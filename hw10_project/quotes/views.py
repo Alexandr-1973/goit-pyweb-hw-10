@@ -38,32 +38,27 @@ def add_quote(request):
             print(author_name)
             print(Author.objects.filter(fullname=author_name).first())
             author = Author.objects.filter(fullname=author_name).first()
-            # print(author_name,author)
 
+            tags_str = form.cleaned_data['tags']
+            tag_names = [tag.strip() for tag in tags_str.split(',')]
 
-            tags_str = form.cleaned_data['tags']  # Получаем теги как строку
-            tag_names = [tag.strip() for tag in tags_str.split(',')]  # Разбиваем и убираем пробелы
-
-            # Находим существующие теги или создаём новые
             tags = []
             for tag_name in tag_names:
                 tag, _ = Tag.objects.get_or_create(name=tag_name)  # Если нет - создаёт
                 tags.append(tag)
 
-            # Создаём объект Quote
             quote = form.save(commit=False)
             quote.author = author
             quote.save()
 
-            # Добавляем теги к цитате
             quote.tags.set(tags)
-            #
-            # quote = form.save(commit=False)  # Создаём объект Quote, но не сохраняем
-            # quote.author = author  # Присваиваем найденного автора
-            # quote.save()
-            # # form.save()
+
             return redirect(to='quotes:root')
         else:
             return render(request, 'quotes/add_quote_form.html', {'form': form})
 
     return render(request, 'quotes/add_quote_form.html', {'form': QuoteForm()})
+
+def author(request, author_fullname):
+    author=get_object_or_404(Author, fullname=author_fullname)
+    return render(request, "quotes/author.html", {"author":author})
