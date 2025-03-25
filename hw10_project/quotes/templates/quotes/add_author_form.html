@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+{% endblock %}
+
 <form method="POST" action="{% url 'quotes:add_author' %}">
     <h2>Enter the author</h2>
     {% csrf_token %}

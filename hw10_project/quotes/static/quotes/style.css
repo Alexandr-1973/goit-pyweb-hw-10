@@ -46,6 +46,7 @@
     text-align: center;
 }
 
+
 .pager .next>a, .pager .next>span {
     text-decoration: none;
     float: right;
@@ -68,4 +69,10 @@
 
 .disabled {
     display: none !important;
+}
+
+.tags-box {
+display: flex;
+flex-direction: column;
+text-align: right;
 }

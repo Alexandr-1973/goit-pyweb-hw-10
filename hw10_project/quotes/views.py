@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect, get_object_or_404
-
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
+from django.db.models import Count
 from .forms import AuthorForm, QuoteForm
 from .utils import get_mongodb
 from django.core.paginator import Paginator
@@ -16,7 +16,10 @@ def main(request, page=1):
     per_page=10
     paginator=Paginator(quotes, per_page)
     quotes_on_page=paginator.page(page)
-    return render(request, "quotes/index.html", context={"quotes":quotes_on_page})
+
+    top_tags = Tag.objects.annotate(num_quotes=Count("quote")).order_by("-num_quotes")[:10]
+
+    return render(request, "quotes/index.html", context={"quotes":quotes_on_page, "top_tags": top_tags})
 
 
 def add_author(request):
@@ -62,3 +65,12 @@ def add_quote(request):
 def author(request, author_fullname):
     author=get_object_or_404(Author, fullname=author_fullname)
     return render(request, "quotes/author.html", {"author":author})
+
+def tag(request, tag, page=1):
+    tag_quotes = get_list_or_404(Quote, tags__name=tag)
+    per_page=10
+    paginator=Paginator(tag_quotes, per_page)
+    quotes_on_page=paginator.page(page)
+    return render(request, "quotes/tag.html", {"quotes":quotes_on_page, "tag":tag})
+
+
